@@ -1,0 +1,89 @@
+/*Typoglycemia is a relatively new word given to a purported recent discovery about how people read written text. As wikipedia puts it:
+
+The legend, propagated by email and message boards, purportedly demonstrates that readers can understand the meaning of words in a
+sentence even when the interior letters of each word are scrambled. As long as all the necessary letters are present, and the first
+and last letters remain the same, readers appear to have little trouble reading the text.
+
+Or as Urban Dictionary puts it:
+
+Typoglycemia
+The mind's ability to decipher a mis-spelled word if the first and last letters of the word are correct.
+The word Typoglycemia describes Teh mdin's atbiliy to dpeihecr a msi-selpeld wrod if the fsirt and lsat lteetrs of the wrod are cerorct.
+
+Input Description
+Any string of words with/without punctuation.
+
+Output Description
+A scrambled form of the same sentence but with the word's first and last letter's positions intact.*/
+
+import java.util.*;
+import java.util.Scanner;
+import java.util.Random;
+
+public class Typoglycemia{
+
+   public static void main(String[] args){
+
+      //Scanner
+      Scanner keyboard = new Scanner(System.in);
+      
+      System.out.println("Type in a sentence and this program will use it to show you the phenomemon of Typoglycemia!");
+      String sentence = keyboard.nextLine();
+      
+      String spliced[] = new String[sentence.length()];
+      
+      for (int counter = 0; counter < sentence.length(); counter++){
+         spliced[counter] = sentence.substring(counter,counter+1);
+      }
+      
+      /*//Test for spliced array
+      for (int counter = 0; counter < sentence.length(); counter++){
+         System.out.print(spliced[counter] + "/");
+      }*/
+      
+      //Random Number Generator
+      Random randomGenerator = new Random();
+      
+      int wordLength = -1;
+      boolean wordEnd = false;
+      String temp;
+      
+      for (int counter = 0; counter < sentence.length(); counter ++){
+         wordLength++;
+         
+         if (spliced[counter].equals(" ") || spliced[counter].equals(".") || spliced[counter].equals("!") || spliced[counter].equals("?") || spliced[counter].equals("(") || spliced[counter].equals(")")){
+            if (wordLength > 4)
+               wordEnd = true;
+            else if (wordLength == 4){ //special case - if ran normally, letters would loop back into correct position
+               temp = spliced[counter-2];
+               spliced[counter-2] = spliced[counter-3];
+               spliced[counter-3] = temp;
+               wordLength = -1;
+            }  
+            else if (spliced[counter+1].equals(" ") || spliced[counter+1].equals("."))
+               wordLength = -2; 
+            else
+               wordLength = -1;
+         }      
+         
+         if (wordEnd){
+            for (int lengthCounter = 1; lengthCounter < wordLength-1; lengthCounter++){
+               
+               int random = lengthCounter;
+               while (random == lengthCounter)
+                  random = randomGenerator.nextInt(wordLength-2) +2;//generates number from 2 to 1 less than the length of the word
+                                                                                    //Ex. wordLength = 5; generates number from 2-4
+               temp = spliced[lengthCounter+counter-wordLength];
+               spliced[lengthCounter+counter-wordLength] = spliced[counter+random-1-wordLength];
+               spliced[counter+random-1-wordLength] = temp;               
+            }
+            wordLength = -1;
+            wordEnd = false;
+         }    
+      }     
+      
+      System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+      for (int counter = 0; counter < sentence.length(); counter++)
+         System.out.print(spliced[counter]);
+   }
+}   
